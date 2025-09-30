@@ -1,0 +1,122 @@
+{
+  "Rules": [
+    {
+      "SettingName": "PendingReboot",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "A restart is required",
+          "Description": "Your device reports a pending reboot for more than 7 days. Restart your  Windows machine to complete updates, then open Company Portal > settings > run Sync."
+        }
+      ]
+    },
+
+    {
+        "SettingName": "SystemDriveFreeGB",
+        "Operator": "LessThan",
+        "DataType": "Int64",
+        "Operand": 6,
+        "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
+        "RemediationStrings": [
+            {
+            "Language": "en_US",
+            "Title": "Insufficient disk space on the System Drive.",
+            "Description": "Ensure at least 5 GB of free space is available on C: drive."
+            }
+        ]
+    },
+
+    {
+      "SettingName": "DmWapPushServiceHealthy",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": false,
+      "MoreInfoUrl": "https://call4cloud.nl/intune-sync-issue-dmwappushservice-missing/",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "'Device Management Wireless Application Protocol (WAP) Push message Routing Service' service is unhealthy",
+          "Description": "Ensure 'Device Management WAP Push message Routing Service' is not disabled and running, then open Company Portal > settings > run Sync."
+        }
+      ]
+    },
+
+    {
+      "SettingName": "IMEHealthy",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": false,
+      "MoreInfoUrl": "https://learn.microsoft.com/intune/intune-service/apps/intune-management-extension",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Intune Management Extension is not running",
+          "Description": "Start 'Microsoft Intune Management Extension' and set Startup type to Automatic (or restart the device), then open Company Portal > settings > run Sync."
+        }
+      ]
+    },
+
+    {
+      "SettingName": "WindowsUpdateServiceHealthy",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": false,
+      "MoreInfoUrl": "https://www.coretechnologies.com/blog/windows-services/windows-update/",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Windows Update service not healthy",
+          "Description": "Set 'Windows Update' (wuauserv) Startup type to Manual/Automatic, restart the device, then open Company Portal > settings > run Sync."
+        }
+      ]
+    },
+
+    {
+      "SettingName": "MSAServiceHealthy",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "MoreInfoUrl": "https://www.smartpcutilities.com/windows-service.html?name=wlidsvc&os=win11",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Microsoft Account Sign-in Assistant not healthy",
+          "Description": "Set 'Microsoft Account Sign-in Assistant' (wlidsvc) to Manual/Automatic, restart the device, then open Company Portal > settings > run Sync."
+        }
+      ]
+    },
+
+    {
+        "SettingName": "DeferQualityUpdatesPeriodInDays",
+        "Operator": "GreaterThan",
+        "DataType": "Int64",
+        "Operand": 7,
+        "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
+        "RemediationStrings": [
+        {
+            "Language": "en_US",
+            "Title": "Quality Updates deferral must be less than 7",
+            "Description": "To Set DeferQualityUpdatesPeriodInDays to a value less than 7 Or kindly contact support team."
+        }
+        ]
+    },
+
+    {
+      "SettingName": "PauseQualityUpdates",
+      "Operator": "NotEquals",
+      "DataType": "Int64",
+      "Operand": 0,
+      "MoreInfoUrl": "https://call4cloud.nl/windows-updates-paused-35-days-not-resuming/",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Quality updates are paused",
+          "Description": "On the search menu look for 'Check for Updates' > click Check for Updates'."
+        }
+      ]
+    }
+  ]
+}
