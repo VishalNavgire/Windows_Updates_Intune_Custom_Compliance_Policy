@@ -198,7 +198,6 @@ $ErrorActionPreference = 'Stop'
 
 # --- Lightweight logging ---
 $LogDir  = 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\ComplianceLogs'
-# $LogDir  = 'C:\Temp'
 $LogFile = 'CustomCompliance_DeviceHealth_' + $($ENV:ComputerName) +'.log'
 $Global:LogFile = Join-Path -Path $LogDir -ChildPath $LogFile
 
