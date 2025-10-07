@@ -4,7 +4,8 @@
       "SettingName": "PendingReboot",
       "Operator": "IsEquals",
       "DataType": "Boolean",
-      "Operand": true,
+      "Operand": false,
+      "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
       "RemediationStrings": [
         {
           "Language": "en_US",
@@ -15,8 +16,38 @@
     },
 
     {
+      "SettingName": "LatestFeatureAndQualityStatus",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Your device is running unsupported OS Version",
+          "Description": "Please contact support team for assistance."
+        }
+      ]
+    },
+
+    {
+      "SettingName": "PreviousFeatureAndQualityStatus ",
+      "Operator": "IsEquals",
+      "DataType": "Boolean",
+      "Operand": true,
+      "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
+      "RemediationStrings": [
+        {
+          "Language": "en_US",
+          "Title": "Your device is running unsupported OS Version",
+          "Description": "Please contact support team for assistance."
+        }
+      ]
+    },
+
+    {
         "SettingName": "SystemDriveFreeGB",
-        "Operator": "LessThan",
+        "Operator": "GreaterThan",
         "DataType": "Int64",
         "Operand": 6,
         "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
@@ -33,7 +64,7 @@
       "SettingName": "DmWapPushServiceHealthy",
       "Operator": "IsEquals",
       "DataType": "Boolean",
-      "Operand": false,
+      "Operand": true,
       "MoreInfoUrl": "https://call4cloud.nl/intune-sync-issue-dmwappushservice-missing/",
       "RemediationStrings": [
         {
@@ -48,7 +79,7 @@
       "SettingName": "IMEHealthy",
       "Operator": "IsEquals",
       "DataType": "Boolean",
-      "Operand": false,
+      "Operand": true,
       "MoreInfoUrl": "https://learn.microsoft.com/intune/intune-service/apps/intune-management-extension",
       "RemediationStrings": [
         {
@@ -63,7 +94,7 @@
       "SettingName": "WindowsUpdateServiceHealthy",
       "Operator": "IsEquals",
       "DataType": "Boolean",
-      "Operand": false,
+      "Operand": true,
       "MoreInfoUrl": "https://www.coretechnologies.com/blog/windows-services/windows-update/",
       "RemediationStrings": [
         {
@@ -93,7 +124,7 @@
         "SettingName": "DeferQualityUpdatesPeriodInDays",
         "Operator": "GreaterThan",
         "DataType": "Int64",
-        "Operand": 7,
+        "Operand": 0,
         "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
         "RemediationStrings": [
         {
@@ -106,7 +137,7 @@
 
     {
       "SettingName": "PauseQualityUpdates",
-      "Operator": "NotEquals",
+      "Operator": "GreaterThan",
       "DataType": "Int64",
       "Operand": 0,
       "MoreInfoUrl": "https://call4cloud.nl/windows-updates-paused-35-days-not-resuming/",
