@@ -328,10 +328,19 @@ Function Test-PreviousFeatureAndQualityStatus
                 Return $False
             }
     }
+#Below function would only run if $Latest_Feature_And_Quality_Status IS NOT True.
 If ($Latest_Feature_And_Quality_Status -eq $False) 
     {
         $Previous_Feature_And_Quality_Status = Test-PreviousFeatureAndQualityStatus -Installed_BuildNumber $Installed_BuildNumber
     }
+
+#Feature and Qualit Update Compliance Result.
+$FeatureAndQualityUpdateCompliant = $False
+If ( $Latest_Feature_And_Quality_Status -Or $Previous_Feature_And_Quality_Status)
+    {
+        $FeatureAndQualityUpdateCompliant = $True
+    }
+
 
 Function Test-PendingReboot 
     {
@@ -500,8 +509,7 @@ Write-Log "PauseQualityUpdates: $PauseQualityUpdates"
 # --- Compose output (names match JSON rules) ---
 $Result = [ordered]@{
 
-                        LatestFeatureAndQualityStatus        = $Latest_Feature_And_Quality_Status
-                        PreviousFeatureAndQualityStatus      = $Previous_Feature_And_Quality_Status 
+                        FeatureAndQualityUpdateCompliant     = $FeatureAndQualityUpdateCompliant 
                         PendingReboot                        = If ($PendingReboot -And ($LastRebootDays -gt 7)) {$True} Else {$False}
                         SystemDriveFreeGB                    = $SystemDriveFreeGB
                         DmWapPushServiceHealthy              = ($DMwappushservice.Healthy)
