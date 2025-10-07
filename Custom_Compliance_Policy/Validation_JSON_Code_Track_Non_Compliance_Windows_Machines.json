@@ -14,24 +14,8 @@
         }
       ]
     },
-
     {
-      "SettingName": "LatestFeatureAndQualityStatus",
-      "Operator": "IsEquals",
-      "DataType": "Boolean",
-      "Operand": true,
-      "MoreInfoUrl": "https://learn.microsoft.com/windows/deployment/update/waas-configure-wufb",
-      "RemediationStrings": [
-        {
-          "Language": "en_US",
-          "Title": "Your device is running unsupported OS Version",
-          "Description": "Please contact support team for assistance."
-        }
-      ]
-    },
-
-    {
-      "SettingName": "PreviousFeatureAndQualityStatus ",
+      "SettingName": "FeatureAndQualityUpdateCompliant ",
       "Operator": "IsEquals",
       "DataType": "Boolean",
       "Operand": true,
