@@ -276,23 +276,23 @@ Function Test-LatestFeatureAndQualityStatus
 
         If (($CurrentBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($CurrentFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
             { 
-                # Write-Log "Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
-                Write-Host "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+                Write-Log "Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+                
                 If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
-                        Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
-                        Write-Host  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        Write-Log  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        Write-Log  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Write-Log "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Write-Log "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
                 Return $False
             }
     }
@@ -309,22 +309,22 @@ Function Test-PreviousFeatureAndQualityStatus
 
             If (($PreviousBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($PreviousFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
             {
-               Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+              Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
                 If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
-                        Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
-                        Write-Host "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        Write-Log "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Write-Log  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
                 Return $False
             }
     }
