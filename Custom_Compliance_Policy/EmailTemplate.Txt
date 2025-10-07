@@ -1,0 +1,96 @@
+    Email Template
+
+    Action Required — Your Device Is Not Compliant with Security Standards
+Hello [FirstName],
+
+Our systems have detected that your Windows device ([Device Name]) is currently not compliant with [Company Name]’s security and update readiness policies. This means your device may not be receiving the latest updates or may not be functioning properly with our management platform (Intune).
+
+To protect your data and ensure continued access to company services (like email, Teams, SharePoint, etc.), your device must meet certain health and configuration standards.
+
+🚨 Why Is My Device Non-Compliant?
+
+Your device may be marked non-compliant for one or more of the following reasons:
+
+Issue	What It Means	Why It Matters
+🔄 Pending Restart	Your device has updates or settings that require a reboot.	Important updates won’t complete without a restart.
+💾 Low Disk Space (C:\ ≤ 5GB)	Your system drive is running low on free space.	Updates may fail or system performance may degrade.
+🔧 Critical Service Not Running	One or more services (like Windows Update or Intune Management Extension) are disabled or stopped.	Your device can’t communicate properly with IT systems or download updates.
+🛑 Update Settings Misconfigured	Some update settings (like update deferral or pause) are blocking updates.	Your device may miss critical security patches.
+✅ What Do I Need to Do?
+
+To bring your device back into compliance, please follow these steps:
+
+🔁 1. Restart Your Device
+
+If you haven't rebooted in a while, restart your machine. This often resolves pending update or service issues.
+
+💽 2. Free Up Disk Space
+
+Ensure your C:\ drive has at least 6 GB of free space:
+
+Delete unnecessary files (Downloads, Temp folders).
+
+Use Disk Cleanup (type Disk Cleanup in Start Menu).
+
+Empty Recycle Bin.
+
+⚙️ 3. Check Services
+
+Ensure the following Windows services are running:
+
+Windows Update
+
+Intune Management Extension
+
+Device Management WAP Push
+
+Microsoft Account Sign-in Assistant
+
+You can open Services.msc from the Start menu and make sure these are Running and Startup Type is set to Automatic.
+
+If you're not comfortable doing this, contact the IT team for help.
+
+🛠️ 4. Reset Update Settings (Optional)
+
+Some update features might be paused or delayed.
+You can check by going to:
+
+Settings > Windows Update
+
+Remove any pause or deferral settings.
+
+Click Check for Updates to manually trigger update scan.
+
+🧑‍💻 5. Contact IT Support if Needed
+
+If you’re unsure how to complete the steps or still see issues after completing them, please reach out:
+
+📧 IT Helpdesk: [it-support@company.com
+]
+📞 Phone: [123-456-7890]
+
+⚠️ Access Impact
+
+While your device is non-compliant, you may experience the following:
+
+Limited access to corporate services (e.g. Outlook, Teams, SharePoint).
+
+Conditional Access blocks or prompts for reauthentication.
+
+These restrictions are lifted automatically once your device returns to a compliant state.
+
+🔄 What Happens Next?
+
+Once you resolve the above issues:
+
+Your device will automatically report compliance within a few hours.
+
+No further action is needed if all issues are fixed.
+
+You’ll receive a confirmation if your device returns to a compliant state.
+
+Thank you for your prompt attention to this matter and for helping keep our environment secure.
+
+—
+Regards, 
+Team Name
