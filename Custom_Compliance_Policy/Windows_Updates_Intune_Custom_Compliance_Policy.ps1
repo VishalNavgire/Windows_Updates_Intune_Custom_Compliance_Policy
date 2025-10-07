@@ -265,7 +265,9 @@ Function Get-WindowsReleaseDate
                 Return $null
             }
     }
-$WindowsReleaseDate = Get-WindowsReleaseDate
+# $WindowsReleaseDate = Get-WindowsReleaseDate
+Write-Log "Checking against latest supported Feature and Quality update (N)..."
+Write-Log "Installed Build: $($Installed_BuildNumber.CurrentBuildNumber), Display Version: $($Installed_BuildNumber.DisplayVersion), UBR: $($Installed_BuildNumber.UBR)"
 #Access N and N-1 for Feature and Quality updates of the Latest BUILD NUmber. If Feature and Qaulity update is older than N-1, return False.    
 Function Test-LatestFeatureAndQualityStatus 
     {
@@ -275,30 +277,30 @@ Function Test-LatestFeatureAndQualityStatus
             )
 
         If (($CurrentBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($CurrentFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
-            { 
-                Write-Log "Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
-                
+            {
                 If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
-                        Write-Log  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        WWrite-Log "Device '$($ENv:COMPUTERNAME)' is compliant with latest Feature and Quality update (N)."
                         # Write-Log  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Log "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' has latest Feature update but outdated Quality update." -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Log "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Write-Log "Device '$($ENv:COMPUTERNAME)' is not running the latest Feature update." -Level Warning
                 Return $False
             }
     }
 
 $Latest_Feature_And_Quality_Status = Test-LatestFeatureAndQualityStatus -Installed_BuildNumber $Installed_BuildNumber
 
+Write-Log "Checking against previous supported Feature and Quality update (N-1)..."
+# Write-Log "Installed Build: $($Installed_BuildNumber.CurrentBuildNumber), Display Version: $($Installed_BuildNumber.DisplayVersion), UBR: $($Installed_BuildNumber.UBR)"
 #Access N and N-1 for Feature and Quality updates of the Previous BUILD NUmber. If Feature and Qaulity update is older than N-1, return False.
 Function Test-PreviousFeatureAndQualityStatus 
     {
@@ -309,22 +311,21 @@ Function Test-PreviousFeatureAndQualityStatus
 
             If (($PreviousBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($PreviousFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
             {
-              Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
                 If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
-                        Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' is compliant with previous Feature and Quality update (N-1)."
                         # Write-Log "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Log  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' has previous Feature update but outdated Quality update." -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Write-Log "Device '$($ENv:COMPUTERNAME)' is not running the previous Feature update." -Level Warning
                 Return $False
             }
     }
