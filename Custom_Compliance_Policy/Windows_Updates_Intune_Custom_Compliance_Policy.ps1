@@ -267,7 +267,7 @@ Function Get-WindowsReleaseDate
     }
 # $WindowsReleaseDate = Get-WindowsReleaseDate
 Write-Log "Checking against latest supported Feature and Quality update (N)..."
-Write-Log "Installed Build: $($Installed_BuildNumber.CurrentBuildNumber), Display Version: $($Installed_BuildNumber.DisplayVersion), UBR: $($Installed_BuildNumber.UBR)"
+Write-Log "Installed Build: $($Installed_BuildNumber.CurrentBuildNumber), Display Version: $($Installed_BuildNumber.DisplayVersion), UBR: $($Installed_BuildNumber.UBR), LCUVersion: $($Installed_BuildNumber.LCUVer)"
 #Access N and N-1 for Feature and Quality updates of the Latest BUILD NUmber. If Feature and Qaulity update is older than N-1, return False.    
 Function Test-LatestFeatureAndQualityStatus 
     {
