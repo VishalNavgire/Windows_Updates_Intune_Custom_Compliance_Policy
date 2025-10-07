@@ -501,7 +501,7 @@ Write-Log "PauseQualityUpdates: $PauseQualityUpdates"
 $Result = [ordered]@{
 
                         LatestFeatureAndQualityStatus        = $Latest_Feature_And_Quality_Status
-                        PreviousFeatureAndQuality_Status     = $Previous_Feature_And_Quality_Status 
+                        PreviousFeatureAndQualityStatus      = $Previous_Feature_And_Quality_Status 
                         PendingReboot                        = If ($PendingReboot -And ($LastRebootDays -gt 7)) {$True} Else {$False}
                         SystemDriveFreeGB                    = $SystemDriveFreeGB
                         DmWapPushServiceHealthy              = ($DMwappushservice.Healthy)
