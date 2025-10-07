@@ -281,7 +281,7 @@ Function Test-LatestFeatureAndQualityStatus
                 If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
                         Write-Log  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
-                        Write-Log  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        # Write-Log  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
@@ -313,7 +313,7 @@ Function Test-PreviousFeatureAndQualityStatus
                 If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR))
                     {
                         Write-Log "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
-                        Write-Log "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        # Write-Log "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
