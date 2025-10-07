@@ -93,108 +93,24 @@
     ---------------
     v1.0 - 2025-09-30 - Initial version with all required checks as per design.
     =======================================================================================
-
-
-    Email Template
-
-    Action Required — Your Device Is Not Compliant with Security Standards
-Hello [FirstName],
-
-Our systems have detected that your Windows device ([Device Name]) is currently not compliant with [Company Name]’s security and update readiness policies. This means your device may not be receiving the latest updates or may not be functioning properly with our management platform (Intune).
-
-To protect your data and ensure continued access to company services (like email, Teams, SharePoint, etc.), your device must meet certain health and configuration standards.
-
-🚨 Why Is My Device Non-Compliant?
-
-Your device may be marked non-compliant for one or more of the following reasons:
-
-Issue	What It Means	Why It Matters
-🔄 Pending Restart	Your device has updates or settings that require a reboot.	Important updates won’t complete without a restart.
-💾 Low Disk Space (C:\ ≤ 5GB)	Your system drive is running low on free space.	Updates may fail or system performance may degrade.
-🔧 Critical Service Not Running	One or more services (like Windows Update or Intune Management Extension) are disabled or stopped.	Your device can’t communicate properly with IT systems or download updates.
-🛑 Update Settings Misconfigured	Some update settings (like update deferral or pause) are blocking updates.	Your device may miss critical security patches.
-✅ What Do I Need to Do?
-
-To bring your device back into compliance, please follow these steps:
-
-🔁 1. Restart Your Device
-
-If you haven't rebooted in a while, restart your machine. This often resolves pending update or service issues.
-
-💽 2. Free Up Disk Space
-
-Ensure your C:\ drive has at least 6 GB of free space:
-
-Delete unnecessary files (Downloads, Temp folders).
-
-Use Disk Cleanup (type Disk Cleanup in Start Menu).
-
-Empty Recycle Bin.
-
-⚙️ 3. Check Services
-
-Ensure the following Windows services are running:
-
-Windows Update
-
-Intune Management Extension
-
-Device Management WAP Push
-
-Microsoft Account Sign-in Assistant
-
-You can open Services.msc from the Start menu and make sure these are Running and Startup Type is set to Automatic.
-
-If you're not comfortable doing this, contact the IT team for help.
-
-🛠️ 4. Reset Update Settings (Optional)
-
-Some update features might be paused or delayed.
-You can check by going to:
-
-Settings > Windows Update
-
-Remove any pause or deferral settings.
-
-Click Check for Updates to manually trigger update scan.
-
-🧑‍💻 5. Contact IT Support if Needed
-
-If you’re unsure how to complete the steps or still see issues after completing them, please reach out:
-
-📧 IT Helpdesk: [it-support@company.com
-]
-📞 Phone: [123-456-7890]
-
-⚠️ Access Impact
-
-While your device is non-compliant, you may experience the following:
-
-Limited access to corporate services (e.g. Outlook, Teams, SharePoint).
-
-Conditional Access blocks or prompts for reauthentication.
-
-These restrictions are lifted automatically once your device returns to a compliant state.
-
-🔄 What Happens Next?
-
-Once you resolve the above issues:
-
-Your device will automatically report compliance within a few hours.
-
-No further action is needed if all issues are fixed.
-
-You’ll receive a confirmation if your device returns to a compliant state.
-
-Thank you for your prompt attention to this matter and for helping keep our environment secure.
-
-—
-Regards, 
-Team Name
-
 #>
 
+# Define N and N-1 values. Update these variables manually each month after Patch Tuesday i.e. on 2nd Wed of every month.
+$CurrentBuildNumber_N    = "26200"
+$CurrentFeatureVersion_N = "25H2"
+$Current_UBR_N           = "6584"
+$Current_UBR_N_1         = $Null
+
+$PreviousBuildNumber_N    = "26100"
+$PreviousFeatureVersion_N = "24H2"
+$Previous_UBR_N           = "6584"
+$Previous_UBR_N_1         = "4946"
+
+#https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information
 $ErrorActionPreference = 'Stop'
+
+# Get current Windows Feature Update and Quality version
+$Installed_BuildNumber = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
 
 # --- Lightweight logging ---
 $LogDir  = 'C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\ComplianceLogs'
@@ -294,6 +210,129 @@ Function Write-Log()
 
             }
     }
+
+Function Get-WindowsReleaseDate 
+    {
+        <#
+            .SYNOPSIS
+            Converts Windows ReleaseId and DisplayVersion into a human-readable release date.
+
+            .DESCRIPTION
+            Reads the registry to extract ReleaseId and DisplayVersion, then formats them into a date string
+            using the custom logic: ReleaseId → Day and Month, DisplayVersion → Year.
+
+            .OUTPUTS
+            PSCustomObject with Day, Month, Year, and FormattedDate.
+
+            .EXAMPLE
+            $releaseInfo = Get-WindowsReleaseDate
+            Write-Output $releaseInfo.FormattedDate
+        #>
+
+        [CmdletBinding()]
+        param ()
+
+        Try 
+            {
+                $WinVer = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+
+                If (-not $WinVer.ReleaseId -or -not $WinVer.DisplayVersion) 
+                    {
+                        throw "ReleaseId or DisplayVersion not found in registry."
+                    }
+
+                # Parse day, month, and year
+                $Day = [int]$WinVer.ReleaseId.Substring(0, 2)
+                $Month = [int]$WinVer.ReleaseId.Substring(2, 2)
+                $Year = 2000 + [int]$WinVer.DisplayVersion.Substring(0, 2)
+
+                # Convert month number to month name
+                $MonthName = (Get-Culture).DateTimeFormat.GetMonthName($month)
+
+                # Format the date
+                $FormattedDate = "$Day-$MonthName-$Year"
+
+                Return [PSCustomObject]@{
+                                            Day           = $Day
+                                            Month         = $MonthName
+                                            Year          = $Year
+                                            FormattedDate = $FormattedDate
+                                        }
+            }
+        Catch 
+            {
+                Write-Warning "Failed to retrieve or parse Windows release information: $_"
+                Return $null
+            }
+    }
+$WindowsReleaseDate = Get-WindowsReleaseDate
+#Access N and N-1 for Feature and Quality updates of the Latest BUILD NUmber. If Feature and Qaulity update is older than N-1, return False.    
+Function Test-LatestFeatureAndQualityStatus 
+    {
+        Param 
+            (
+                $Installed_BuildNumber
+            )
+
+        If (($CurrentBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($CurrentFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
+            { 
+                # Write-Log "Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+                Write-Host "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+                If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR))
+                    {
+                        Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        Write-Host  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        Return $True
+                    }
+                Else 
+                    {
+                        Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Return $False
+                    }
+            }
+        Else 
+            {
+                Write-Host  "Latest Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Return $False
+            }
+    }
+
+$Latest_Feature_And_Quality_Status = Test-LatestFeatureAndQualityStatus -Installed_BuildNumber $Installed_BuildNumber
+
+#Access N and N-1 for Feature and Quality updates of the Previous BUILD NUmber. If Feature and Qaulity update is older than N-1, return False.
+Function Test-PreviousFeatureAndQualityStatus 
+    {
+        Param 
+            (
+                $Installed_BuildNumber
+            )
+
+            If (($PreviousBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($PreviousFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
+            {
+               Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). "
+                If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR))
+                    {
+                        Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). "
+                        Write-Host "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
+                        Return $True
+                    }
+                Else 
+                    {
+                        Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its Update Build Revision is: $($Installed_BuildNumber.UBR). " -Level Warning
+                        Return $False
+                    }
+            }
+        Else 
+            {
+                Write-Host  "Previous Installed Feature update is: $($Installed_BuildNumber.CurrentBuildNumber) and its display version is: $($Installed_BuildNumber.DisplayVersion). " -Level Warning
+                Return $False
+            }
+    }
+If ($Latest_Feature_And_Quality_Status -eq $False) 
+    {
+        $Previous_Feature_And_Quality_Status = Test-PreviousFeatureAndQualityStatus -Installed_BuildNumber $Installed_BuildNumber
+    }
+
 Function Test-PendingReboot 
     {
         $paths = @(
@@ -459,18 +498,21 @@ Write-Log "DeferQualityUpdatesPeriodInDays: $DeferQualityUpdatesPeriodInDays"
 Write-Log "PauseQualityUpdates: $PauseQualityUpdates"
 
 # --- Compose output (names match JSON rules) ---
-$result = [ordered]@{
-                        PendingReboot                   = If ($PendingReboot -And ($LastRebootDays -gt 7)) {$True} Else {$False}
-                        SystemDriveFreeGB               = $SystemDriveFreeGB
-                        DmWapPushServiceHealthy         = ($DMwappushservice.Healthy)
-                        IMEHealthy                      = ($IME.Healthy)
-                        WindowsUpdateServiceHealthy     = ($WUA.Healthy)
-                        MSAServiceHealthy               = ($MSA.Healthy)
-                        DeferQualityUpdatesPeriodInDays = $DeferQualityUpdatesPeriodInDays
-                        PauseQualityUpdates             = $PauseQualityUpdates
+$Result = [ordered]@{
+
+                        LatestFeatureAndQualityStatus        = $Latest_Feature_And_Quality_Status
+                        PreviousFeatureAndQuality_Status     = $Previous_Feature_And_Quality_Status 
+                        PendingReboot                        = If ($PendingReboot -And ($LastRebootDays -gt 7)) {$True} Else {$False}
+                        SystemDriveFreeGB                    = $SystemDriveFreeGB
+                        DmWapPushServiceHealthy              = ($DMwappushservice.Healthy)
+                        IMEHealthy                           = ($IME.Healthy)
+                        WindowsUpdateServiceHealthy          = ($WUA.Healthy)
+                        MSAServiceHealthy                    = ($MSA.Healthy)
+                        DeferQualityUpdatesPeriodInDays      = $DeferQualityUpdatesPeriodInDays
+                        PauseQualityUpdates                  = $PauseQualityUpdates
                     }
 
-Write-Log "Final Result JSON: $($Result | ConvertTo-Json -Compress)"
+Write-Log "Final Result JSON: $($Result | ConvertTo-Json -Compress -Depth 3)"
 
 # --- Return single-line JSON ---
 $Result | ConvertTo-Json -Depth 3 -Compress
