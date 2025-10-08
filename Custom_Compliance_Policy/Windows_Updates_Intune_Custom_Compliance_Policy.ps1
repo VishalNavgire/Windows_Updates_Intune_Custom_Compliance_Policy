@@ -86,7 +86,10 @@
 
     =======================================================================================
 
-    Docs: https://learn.microsoft.com/intune/intune-service/protect/compliance-custom-script
+    Docs: 
+        https://learn.microsoft.com/intune/intune-service/protect/compliance-custom-script
+        https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information
+        https://techcommunity.microsoft.com/blog/windows-itpro-blog/windows-monthly-updates-explained/3773544
 
     =======================================================================================
     CHANGE HISTORY:
@@ -100,13 +103,21 @@ $CurrentBuildNumber_N    = "26200"
 $CurrentFeatureVersion_N = "25H2"
 $Current_UBR_N           = "6584"
 $Current_UBR_N_1         = $Null
+$Current_D_Update_N      = $Null
+$Current_D_Update_N_1    = $Null
+$Current_OOB_Update_N    = $Null
+$Current_OOB_Update_N_1  = $Null
+
 
 $PreviousBuildNumber_N    = "26100"
 $PreviousFeatureVersion_N = "24H2"
 $Previous_UBR_N           = "6584"
 $Previous_UBR_N_1         = "4946"
+$Previous_D_Update_N      = "6725"
+$Previous_D_Update_N_1    = "5074"
+$Previous_OOB_Update_N    = "6588"
+$Previous_OOB_Update_N_1  = $Null
 
-#https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information
 $ErrorActionPreference = 'Stop'
 
 # Get current Windows Feature Update and Quality version
@@ -278,21 +289,27 @@ Function Test-LatestFeatureAndQualityStatus
 
         If (($CurrentBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($CurrentFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
             {
-                If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR))
+                If (($Current_UBR_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Current_UBR_N_1 -eq $Installed_BuildNumber.UBR) -or 
+                    ($Current_D_Update_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Current_D_Update_N_1 -eq $Installed_BuildNumber.UBR) -or 
+                    ($Current_OOB_Update_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Current_OOB_Update_N_1 -eq $Installed_BuildNumber.UBR))
+
                     {
-                        WWrite-Log "Device '$($ENv:COMPUTERNAME)' is compliant with latest Feature and Quality update (N)."
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' is compliant with latest Feature update installed as '$($Installed_BuildNumber.CurrentBuildNumber) and Quality update as '$($Installed_BuildNumber.UBR)'."
                         # Write-Log  "Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Log "Device '$($ENv:COMPUTERNAME)' has latest Feature update but outdated Quality update." -Level Warning
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' has latest Feature update installed as '$($Installed_BuildNumber.CurrentBuildNumber) but outdated Quality update as '$($Installed_BuildNumber.UBR)'." -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Log "Device '$($ENv:COMPUTERNAME)' is not running the latest Feature update." -Level Warning
+                Write-Log "Device '$($ENv:COMPUTERNAME)' is not running the latest Feature update (N)." -Level Warning
                 Return $False
             }
     }
@@ -311,21 +328,26 @@ Function Test-PreviousFeatureAndQualityStatus
 
             If (($PreviousBuildNumber_N -eq $Installed_BuildNumber.CurrentBuildNumber) -And ($PreviousFeatureVersion_N -eq $Installed_BuildNumber.DisplayVersion))
             {
-                If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR))
+                If (($Previous_UBR_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Previous_UBR_N_1 -eq $Installed_BuildNumber.UBR) -or
+                    ($Previous_D_Update_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Previous_D_Update_N_1 -eq $Installed_BuildNumber.UBR) -or 
+                    ($Previous_OOB_Update_N -eq $Installed_BuildNumber.UBR) -or 
+                    ($Previous_OOB_Update_N_1 -eq $Installed_BuildNumber.UBR))
                     {
-                        Write-Log "Device '$($ENv:COMPUTERNAME)' is compliant with previous Feature and Quality update (N-1)."
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' is compliant with previous Feature update installed as '$($Installed_BuildNumber.CurrentBuildNumber)' and Quality update (N-1) as '$($Installed_BuildNumber.UBR)'."
                         # Write-Log "Previous Release Date is: $($WindowsReleaseDate.FormattedDate)"
                         Return $True
                     }
                 Else 
                     {
-                        Write-Log "Device '$($ENv:COMPUTERNAME)' has previous Feature update but outdated Quality update." -Level Warning
+                        Write-Log "Device '$($ENv:COMPUTERNAME)' has previous Feature update as '$($Installed_BuildNumber.CurrentBuildNumber)' but outdated Quality update as '$($Installed_BuildNumber.UBR)'." -Level Warning
                         Return $False
                     }
             }
         Else 
             {
-                Write-Log "Device '$($ENv:COMPUTERNAME)' is not running the previous Feature update." -Level Warning
+                Write-Log "Device '$($ENv:COMPUTERNAME)' is running the outdated Feature update as '$($Installed_BuildNumber.CurrentBuildNumber)' and Quality update as '$($Installed_BuildNumber.UBR)'." -Level Warning
                 Return $False
             }
     }
