@@ -101,9 +101,9 @@
 # Define N and N-1 values. Update these variables manually each month after Patch Tuesday i.e. on 2nd Wed of every month.
 $CurrentBuildNumber_N    = "26200"
 $CurrentFeatureVersion_N = "25H2"
-$Current_UBR_N           = "6584"
+$Current_UBR_N           = "6584" 
 $Current_UBR_N_1         = $Null
-$Current_D_Update_N      = $Null
+$Current_D_Update_N      = $Null 
 $Current_D_Update_N_1    = $Null
 $Current_OOB_Update_N    = $Null
 $Current_OOB_Update_N_1  = $Null
@@ -113,7 +113,7 @@ $PreviousBuildNumber_N    = "26100"
 $PreviousFeatureVersion_N = "24H2"
 $Previous_UBR_N           = "6584"
 $Previous_UBR_N_1         = "4946"
-$Previous_D_Update_N      = "6725"
+$Previous_D_Update_N      = "6725" 
 $Previous_D_Update_N_1    = "5074"
 $Previous_OOB_Update_N    = "6588"
 $Previous_OOB_Update_N_1  = $Null
