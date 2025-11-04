@@ -32,6 +32,10 @@ If any of the defined checks fail, the device is marked as **❌ NonCompliant**,
      - 🧩 `intunemanagementextension` → Intune Management Extension *(executes Win32 apps & scripts)*
      - 🔄 `wuauserv` → Windows Update Service *(manages update fetch & install)*
      - 👤 `wlidsvc` → Microsoft Account Sign-In Assistant *(used for device identity in updates)*  
+     - `CryptSvc` → *Provides three management services: Catalog Database Service, which confirms the signatures of Windows files and allows new programs to be installed; Protected Root Service, which adds
+                      and removes Trusted Root Certification Authority certificates from this computer; and Automatic Root Certificate Update Service, which retrieves root certificates from Windows Update and
+                      enable scenarios such as SSL. If this service is stopped, these management services will not function properly. If this service is disabled, any services that explicitly depend on it will
+                      fail to start.*
    - ❌ If any are **stopped**, **disabled**, or **missing** → device is **NonCompliant**.
 
 4️⃣ ✅ **Registry Settings for Update Deferral**
@@ -55,6 +59,7 @@ Script returns a **JSON object** compatible with Intune Custom Compliance polici
   "IMEHealthy": true,
   "WindowsUpdateServiceHealthy": true,
   "MSAServiceHealthy": true,
+  "CryptographicServiceHealthy": true,
   "DeferQualityUpdatesPeriodInDays": 7,
   "PauseQualityUpdates": 0
 }
