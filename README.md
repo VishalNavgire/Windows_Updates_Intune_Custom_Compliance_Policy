@@ -14,7 +14,7 @@ If any of the defined checks fail, the device is marked as **❌ NonCompliant**,
 
 🎯 GOAL: Improve update reliability 🔁, reduce IT support issues 🛠️, and maintain Windows servicing compliance across your organization 🏢.
 
-====================================================================
+
 🧪 CHECKS PERFORMED:
 ---------------------
 
@@ -42,7 +42,7 @@ If any of the defined checks fail, the device is marked as **❌ NonCompliant**,
      - `PauseQualityUpdates` = `0`
    - ❌ Missing or misconfigured values will trigger **NonCompliance** due to potential update delays.
 
-====================================================================
+
 📤 OUTPUT FORMAT:
 -----------------
 Script returns a **JSON object** compatible with Intune Custom Compliance policies:
