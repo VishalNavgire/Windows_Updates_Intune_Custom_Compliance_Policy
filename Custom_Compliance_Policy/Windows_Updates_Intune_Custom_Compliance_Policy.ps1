@@ -40,6 +40,10 @@
         - `intunemanagementextension` → Intune Management Extension (executes Win32 apps, scripts)
         - `wuauserv` → Windows Update Service (fetches and installs updates)
         - `wlidsvc` → Microsoft Account Sign-In Assistant (generates device identifiers for updates)
+        - 'CryptSvc' → Provides three management services: Catalog Database Service, which confirms the signatures of Windows files and allows new programs to be installed; Protected Root Service, which adds
+                      and removes Trusted Root Certification Authority certificates from this computer; and Automatic Root Certificate Update Service, which retrieves root certificates from Windows Update and
+                      enable scenarios such as SSL. If this service is stopped, these management services will not function properly. If this service is disabled, any services that explicitly depend on it will
+                      fail to start.
     
         - If any of these are **Stopped**, **Disabled**, or **Missing**, the device is 
             marked non-compliant.
@@ -64,6 +68,7 @@
                         "WapPushServiceHealthy":true,
                         "IMEHealthy":true,"WindowsUpdateServiceHealthy":true,
                         "MSAServiceHealthy":true,
+                        "CryptographicServiceHealthy": true,
                         "DeferQualityUpdatesPeriodInDays":7,
                         "PauseQualityUpdates":0
                         }
@@ -363,8 +368,6 @@ If ( $Latest_Feature_And_Quality_Status -Or $Previous_Feature_And_Quality_Status
     {
         $FeatureAndQualityUpdateCompliant = $True
     }
-
-
 Function Test-PendingReboot 
     {
         $paths = @(
@@ -429,6 +432,11 @@ $WindowsServicePolicy = @(
                             @{ 
                                 Names=@('wlidsvc');                         
                                 Label='MSA';     
+                                RequireRunning=$True
+                            },
+                            @{
+                                Names=@('CryptSvc');                        
+                                Label='CryptSvc';    
                                 RequireRunning=$True
                             }
                         )
@@ -509,7 +517,15 @@ Else
         Write-Log -Message "Status of 'Microsoft Account Sign-in Assistant Service' $($MSA)"
     }
 
-
+$CryptSvc = Get-ServiceHealth -Names $WindowsServicePolicy[4].Names -RequireRunning $WindowsServicePolicy[4].RequireRunning
+If ($CryptSvc.Healthy -ne $True)
+    {
+        Write-Log -Message "Status of 'Cryptographic Services' $($CryptSvc)" -Level Warning
+    }
+Else
+    {
+        Write-Log -Message "Status of 'Cryptographic Services' $($CryptSvc)"
+    }
 # --- D. Windows Update policy registry (return -1 if missing) ---
 $WUKey = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Update'
 
@@ -539,6 +555,7 @@ $Result = [ordered]@{
                         IMEHealthy                           = ($IME.Healthy)
                         WindowsUpdateServiceHealthy          = ($WUA.Healthy)
                         MSAServiceHealthy                    = ($MSA.Healthy)
+                        CryptographicServiceHealthy          = ($CryptSvc.Healthy)
                         DeferQualityUpdatesPeriodInDays      = $DeferQualityUpdatesPeriodInDays
                         PauseQualityUpdates                  = $PauseQualityUpdates
                     }
